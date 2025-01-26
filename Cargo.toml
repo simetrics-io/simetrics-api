@@ -9,6 +9,10 @@ keywords = ["tokenomics", "crypto", "blockchain", "simulator"]
 repository = "https://github.com/slavik-pastushenko/tokenomics-simulator"
 documentation = "https://docs.rs/tokenomics-simulator"
 
+[lib]
+name = "tokenomics_simulator_api"
+path = "src/lib.rs"
+
 [[bin]]
 name = "tokenomics_simulator_api"
 path = "src/main.rs"
@@ -22,5 +26,10 @@ tokio = { version = "1.43.0", features = ["full"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
 uuid = { version = "1.12.1", features = ["serde", "v4"] }
-
 tokenomics-simulator = { path = "../tokenomics-simulator-rs" }
+sqlx = { version = "0.8.3", features = [
+  "runtime-tokio-native-tls",
+  "postgres",
+  "uuid",
+  "time",
+] }

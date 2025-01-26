@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:17.2-alpine
+    container_name: database
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=tokenomics
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_MULTIPLE_DATABASES=tokenomics,tokenomics_test
+    volumes:
+      - ./create-multiple-databases.sh:/docker-entrypoint-initdb.d/create-multiple-databases.sh
+    ports:
+      - 5432:5432

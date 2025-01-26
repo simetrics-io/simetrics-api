@@ -1,29 +1,17 @@
 use std::net::SocketAddr;
 
-use axum::{
-    routing::{delete, get, post},
-    Router,
-};
+use sqlx::postgres::PgPoolOptions;
+use tokenomics_simulator_api::app;
 use tokio::net::TcpListener;
-use tracing::info;
+use tracing::{debug, info};
 use tracing_subscriber::EnvFilter;
-
-mod health;
-mod token;
-
-pub async fn app() -> Router {
-    Router::new()
-        .route("/health", get(health::get))
-        // Tokens
-        .route("/tokens", get(token::get_all))
-        .route("/tokens/{id}", get(token::get))
-        .route("/tokens", post(token::create))
-        .route("/tokens/{id}", delete(token::delete))
-}
 
 #[tokio::main]
 async fn main() {
+    // Load environment variables
     dotenvy::dotenv().expect("Environment file not found");
+
+    // Init tracing
     let tracing = tracing_subscriber::fmt()
         .with_target(false)
         .with_env_filter(EnvFilter::from_default_env());
@@ -36,6 +24,23 @@ async fn main() {
     } else {
         tracing.json().init();
     }
+
+    // Connect to Postgres
+    debug!("Connecting to Postgres ...");
+    let db = PgPoolOptions::new()
+        .max_connections(20)
+        .connect(&std::env::var("DATABASE_URL").expect("DATABASE_URL is missed"))
+        .await
+        .expect("cannot connect to postgresql");
+    debug!("Connected to Postgres");
+
+    // Run migrations
+    debug!("Running migrations ...");
+    sqlx::migrate!()
+        .run(&db)
+        .await
+        .expect("cannot run migrations");
+    debug!("Migrations are run");
 
     let address_app = SocketAddr::from(([0, 0, 0, 0], 3000));
 
