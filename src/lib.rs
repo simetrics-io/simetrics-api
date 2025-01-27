@@ -1,26 +1,29 @@
+use std::sync::Arc;
+
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
     routing::{delete, get, post},
     Json, Router,
 };
+use redis::Redis;
 use serde::Serialize;
 use serde_json::json;
 use serde_variant::to_variant_name;
-use sqlx::{postgres::PgPoolOptions, PgPool};
 use strum::EnumProperty;
 use strum_macros::{EnumIter, EnumProperty};
 use thiserror::Error;
-use tracing::debug;
+use tokio::sync::RwLock;
 
 mod health;
+mod redis;
 mod token;
 
 /// Application state.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct AppState {
-    /// Postgres connection pool.
-    pub db: PgPool,
+    /// Redis client.
+    pub redis: Arc<RwLock<Redis>>,
 }
 
 /// Exceptions that can be thrown by the application.
@@ -31,6 +34,12 @@ pub enum Exception {
     #[error("Token not found.")]
     #[strum(props(status_code = "404"))]
     TokenNotFound,
+
+    /// Internal error.
+    #[serde(rename = "INTERNAL_ERROR")]
+    #[error("Internal error.")]
+    #[strum(props(status_code = "500"))]
+    InternalError,
 }
 
 impl Exception {
@@ -84,29 +93,13 @@ impl IntoResponse for Exception {
 }
 
 pub async fn app() -> Router {
-    // Connect to Postgres
-    debug!("Connecting to Postgres ...");
-    let db = PgPoolOptions::new()
-        .max_connections(20)
-        .connect(&std::env::var("DATABASE_URL").expect("DATABASE_URL is missed"))
-        .await
-        .expect("cannot connect to postgresql");
-    debug!("Connected to Postgres");
-
-    // Run migrations
-    debug!("Running migrations ...");
-    sqlx::migrate!()
-        .run(&db)
-        .await
-        .expect("cannot run migrations");
-    debug!("Migrations are run");
-
-    let state = AppState { db };
+    let state = AppState {
+        redis: Arc::new(RwLock::new(Redis::new().await)),
+    };
 
     Router::new()
         .route("/health", get(health::get))
         // Tokens
-        .route("/tokens", get(token::get_all))
         .route("/tokens/{id}", get(token::get))
         .route("/tokens", post(token::create))
         .route("/tokens/{id}", delete(token::delete))
