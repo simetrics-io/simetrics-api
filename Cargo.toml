@@ -1,10 +1,11 @@
 [package]
 name = "tokenomics-simulator-api"
+description = "API for tokenomics simulator"
 version = "0.1.0"
-license = "MIT"
+publish = false
 edition = "2021"
 readme = "README.md"
-authors = ["Slavik Pastushenko <slavpas@gmail.com>"]
+authors = ["simetrics <info@simetrics.io>"]
 keywords = ["tokenomics", "crypto", "blockchain", "simulator"]
 repository = "https://github.com/slavik-pastushenko/tokenomics-simulator"
 documentation = "https://docs.rs/tokenomics-simulator"
