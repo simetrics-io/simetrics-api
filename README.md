@@ -10,12 +10,6 @@
 
 [![test](https://github.com/simetrics-io/tokenomics-api/actions/workflows/test.yml/badge.svg)](https://github.com/simetrics-io/tokenomics-api/actions/workflows/test.yml)
 
-## About simetrics
-
-Simetrics is a tool for simulating the tokenomics of a project.
-
-It allows users to simulate trades, calculate various metrics, and predict user behaviour over different time intervals.
-
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
