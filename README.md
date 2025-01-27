@@ -8,8 +8,7 @@
 
 ## Reference implementation
 
-[![test](https://github.com/simetrics-io/tokenomics-api/actions/workflows/test-workflow.yml/badge.svg)](https://github.com/simetrics-io/tokenomics-api/actions/workflows/test-workflow.yml)
-[![build](https://github.com/simetrics-io/tokenomics-api/actions/workflows/build-workflow.yml/badge.svg?branch=main)](https://github.com/simetrics-io/tokenomics-api/actions/workflows/build-workflow.yml)
+[![test](https://github.com/simetrics-io/tokenomics-api/actions/workflows/test.yml/badge.svg)](https://github.com/simetrics-io/tokenomics-api/actions/workflows/test.yml)
 
 ## About simetrics
 
