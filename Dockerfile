@@ -15,3 +15,5 @@ RUN cargo build --release
 FROM gcr.io/distroless/cc
 
 COPY --from=builder ./app/target/release/tokenomics_simulator_api /tokenomics_simulator_api
+
+CMD ["./tokenomics_simulator_api"]
