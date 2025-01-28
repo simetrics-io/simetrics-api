@@ -1,5 +1,5 @@
 [package]
-name = "tokenomics-simulator-api"
+name = "simetrics-api"
 description = "API for tokenomics simulator"
 version = "0.1.0"
 publish = false
@@ -26,6 +26,7 @@ tokio = { version = "1.43.0", features = ["full"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
 uuid = { version = "1.12.1", features = ["serde", "v4"] }
+# TODO: update it so we can use in CI
 tokenomics-simulator = { path = "../tokenomics-simulator-rs" }
 thiserror = "2.0.11"
 strum = "0.26.3"

@@ -1,14 +1,8 @@
-<br />
-<br />
-<p align="center">
-<img src="https://avatars.githubusercontent.com/u/196379875?s=200&v=4" width="240" alt="simetrics">
-</p>
-<br />
-<br />
+# Simetrics API
 
 ## Reference implementation
 
-[![test](https://github.com/simetrics-io/tokenomics-api/actions/workflows/test.yml/badge.svg)](https://github.com/simetrics-io/tokenomics-api/actions/workflows/test.yml)
+[![test](https://github.com/simetrics-io/simetrics-api/actions/workflows/test.yml/badge.svg)](https://github.com/simetrics-io/simetrics-api/actions/workflows/test.yml)
 
 ## Prerequisites
 
@@ -23,7 +17,7 @@ Before you begin, ensure you have met the following requirements:
 ### Clone the repository
 
 ```bash
-git clone git@github.com:simetrics-io/tokenomics-simulator-rs.git
+git clone https://github.com/simetrics-io/simetrics-api.git
 ```
 
 ### Set up environment variables
@@ -40,7 +34,7 @@ docker-compose up -d
 
 ### Start an application
 
-> To start in the watch mode, please use: `cargo watch -x 'run -p tokenomics-simulator-api'`.
+> To start in the watch mode, please use: `cargo watch -x 'run -p simetrics-api'`.
 
 ```bash
 cargo run -p $SERVICE_NAME

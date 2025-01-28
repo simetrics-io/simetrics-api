@@ -17,6 +17,7 @@ use tokio::sync::RwLock;
 
 mod health;
 mod redis;
+mod simulation;
 mod token;
 
 /// Application state.
@@ -35,11 +36,23 @@ pub enum Exception {
     #[strum(props(status_code = "404"))]
     TokenNotFound,
 
+    /// Simulation not found.
+    #[serde(rename = "SIMULATION_NOT_FOUND")]
+    #[error("Simulation not found.")]
+    #[strum(props(status_code = "404"))]
+    SimulationNotFound,
+
     /// Internal error.
     #[serde(rename = "INTERNAL_ERROR")]
     #[error("Internal error.")]
     #[strum(props(status_code = "500"))]
     InternalError,
+
+    /// Invalid input.
+    #[serde(rename = "INVALID_INPUT")]
+    #[error("Invalid input.")]
+    #[strum(props(status_code = "400"))]
+    InvalidInput,
 }
 
 impl Exception {
@@ -103,6 +116,10 @@ pub async fn app() -> Router {
         .route("/tokens/{id}", get(token::get))
         .route("/tokens", post(token::create))
         .route("/tokens/{id}", delete(token::delete))
+        // Simulations
+        .route("/{token_id}/simulations/{id}", get(simulation::get))
+        .route("/{token_id}/simulations", post(simulation::create))
+        .route("/{token_id}/simulations/{id}", delete(simulation::delete))
         .with_state(state)
 }
 

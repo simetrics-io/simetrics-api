@@ -7,6 +7,8 @@ use rustis::{
 use serde::de::DeserializeOwned;
 use tracing::{debug, error};
 
+use crate::Exception;
+
 /// Redis client.
 #[derive(Clone)]
 pub struct Redis {
@@ -31,6 +33,25 @@ impl Redis {
         debug!("Connected to Redis");
 
         Redis { client }
+    }
+
+    /// Check if a key exists in Redis.
+    ///
+    /// # Arguments
+    ///
+    /// - `key`: Key to check.
+    ///
+    /// # Returns
+    ///
+    /// Flag indicating if the key exists.
+    pub async fn exists(&mut self, key: &str) -> bool {
+        match self.client.exists(key).await {
+            Ok(value) => value > 0,
+            Err(err) => {
+                error!("Failed to check key: {:?} with error: {:?}", key, err);
+                false
+            }
+        }
     }
 
     /// Get a value from Redis.
@@ -66,14 +87,23 @@ impl Redis {
     /// # Returns
     ///
     /// Result of the operation.
-    pub async fn set<T: SingleArg>(&mut self, key: &str, value: T, ttl: Option<u64>) {
+    pub async fn set<T: SingleArg>(
+        &mut self,
+        key: &str,
+        value: T,
+        ttl: Option<u64>,
+    ) -> Result<(), Exception> {
         if let Some(ttl) = ttl {
             if let Err(err) = self.client.setex(key, ttl, value).await {
                 error!("Failed to set key: {:?} with error: {:?}", key, err);
+                return Err(Exception::InternalError);
             }
         } else if let Err(err) = self.client.set(key, value).await {
             error!("Failed to set key: {:?} with error: {:?}", key, err);
+            return Err(Exception::InternalError);
         }
+
+        Ok(())
     }
 
     /// Delete a value from Redis.

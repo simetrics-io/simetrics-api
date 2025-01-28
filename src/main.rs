@@ -16,7 +16,7 @@ async fn main() {
         .with_env_filter(EnvFilter::from_default_env());
 
     if std::env::var("ENVIRONMENT")
-        .and_then(|env| Ok(env == "local"))
+        .map(|env| env == "local")
         .is_ok()
     {
         tracing.init();
@@ -24,7 +24,13 @@ async fn main() {
         tracing.json().init();
     }
 
-    let address_app = SocketAddr::from(([0, 0, 0, 0], 3000));
+    let address_app = SocketAddr::from((
+        [0, 0, 0, 0],
+        std::env::var("PORT")
+            .expect("PORT is missed")
+            .parse()
+            .unwrap(),
+    ));
     info!("Server is running on {}", address_app);
 
     let listener = TcpListener::bind(&address_app).await.unwrap();
