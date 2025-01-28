@@ -7,7 +7,7 @@ use tokenomics_simulator::{Simulation, SimulationBuilder, Token};
 use tracing::error;
 use uuid::Uuid;
 
-use crate::{AppState, Exception};
+use crate::{AppState, Exception, CACHE_TTL};
 
 /// Get a simulation.
 ///
@@ -115,7 +115,7 @@ pub async fn create(
             .set(
                 &simulation.id.to_string(),
                 serde_json::to_string(&simulation).unwrap(),
-                None,
+                Some(CACHE_TTL),
             )
             .await
         {
@@ -163,7 +163,7 @@ pub async fn delete(
             true => (StatusCode::OK, "OK").into_response(),
             false => {
                 error!("Simulation not found: {:?}", id);
-                 Exception::SimulationNotFound.into_response()
+                Exception::SimulationNotFound.into_response()
             }
         },
         Err(err) => {

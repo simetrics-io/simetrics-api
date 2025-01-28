@@ -20,6 +20,9 @@ mod redis;
 mod simulation;
 mod token;
 
+/// Cache time-to-live, in seconds.
+pub const CACHE_TTL: u64 = 24 * 60 * 60;
+
 /// Application state.
 #[derive(Clone)]
 pub struct AppState {

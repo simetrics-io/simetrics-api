@@ -7,7 +7,7 @@ use tokenomics_simulator::{Token, TokenBuilder};
 use tracing::error;
 use uuid::Uuid;
 
-use crate::{AppState, Exception};
+use crate::{AppState, Exception, CACHE_TTL};
 
 /// Get a token.
 ///
@@ -105,7 +105,7 @@ pub async fn create(
             .set(
                 &token.id.to_string(),
                 serde_json::to_string(&token).unwrap(),
-                None,
+                Some(CACHE_TTL),
             )
             .await
         {
