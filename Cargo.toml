@@ -27,7 +27,9 @@ tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
 uuid = { version = "1.12.1", features = ["serde", "v4"] }
 # TODO: update it so we can use in CI
-tokenomics-simulator = { path = "../tokenomics-simulator-rs" }
+tokenomics-simulator = { path = "../tokenomics-simulator-rs", features = [
+  "serde",
+] }
 thiserror = "2.0.11"
 strum = "0.26.3"
 strum_macros = "0.26.4"
