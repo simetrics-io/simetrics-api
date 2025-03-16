@@ -19,13 +19,11 @@ path = "src/main.rs"
 
 [dependencies]
 axum = "0.8.1"
-chrono = { version = "0.4.39", features = ["serde"] }
 dotenvy = "0.15.7"
 serde = { version = "1.0.217", features = ["derive"] }
 tokio = { version = "1.43.0", features = ["full"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
-uuid = { version = "1.12.1", features = ["serde", "v4"] }
 # TODO: update it so we can use in CI
 tokenomics-simulator = { path = "../tokenomics-simulator-rs", features = [
   "serde",
@@ -35,4 +33,3 @@ strum = "0.26.3"
 strum_macros = "0.26.4"
 serde_variant = "0.1.3"
 serde_json = { version = "1.0.137", features = ["raw_value"] }
-rustis = "0.13.3"

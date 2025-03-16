@@ -8,7 +8,6 @@
 
 Before you begin, ensure you have met the following requirements:
 
-- You have installed [Docker](https://www.docker.com/).
 - You have installed [Rust](https://doc.rust-lang.org/cargo/getting-started/installation.html).
 - You have installed [Cargo Watch](https://crates.io/crates/cargo-watch).
 
@@ -26,18 +25,10 @@ git clone https://github.com/simetrics-io/simetrics-api.git
 cp .env.dev .env
 ```
 
-### Run Docker
-
-```bash
-docker-compose up -d
-```
-
 ### Start an application
 
-> To start in the watch mode, please use: `cargo watch -x 'run -p simetrics-api'`.
-
 ```bash
-cargo run -p $SERVICE_NAME
+cargo watch -x 'run -p simetrics-api'
 ```
 
 ### Run tests
@@ -72,12 +63,6 @@ To run tests with logs, use the following command:
 
 ```bash
 cargo test -- --nocapture
-```
-
-To review and accept/reject snapshots, install [cargo-insta](https://crates.io/crates/cargo-insta) and run:
-
-```bash
-cargo-insta review
 ```
 
 ### Check the codebase

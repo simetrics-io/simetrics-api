@@ -1,34 +1,18 @@
-use std::sync::Arc;
-
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
-    routing::{delete, get, post},
+    routing::{get, post},
     Json, Router,
 };
-use redis::Redis;
 use serde::Serialize;
 use serde_json::json;
 use serde_variant::to_variant_name;
 use strum::EnumProperty;
 use strum_macros::{EnumIter, EnumProperty};
 use thiserror::Error;
-use tokio::sync::RwLock;
 
 mod health;
-mod redis;
 mod simulation;
-mod token;
-
-/// Cache time-to-live, in seconds.
-pub const CACHE_TTL: u64 = 24 * 60 * 60;
-
-/// Application state.
-#[derive(Clone)]
-pub struct AppState {
-    /// Redis client.
-    pub redis: Arc<RwLock<Redis>>,
-}
 
 /// Exceptions that can be thrown by the application.
 #[derive(Debug, Error, Serialize, PartialEq, Eq, EnumProperty, EnumIter)]
@@ -109,21 +93,9 @@ impl IntoResponse for Exception {
 }
 
 pub async fn app() -> Router {
-    let state = AppState {
-        redis: Arc::new(RwLock::new(Redis::new().await)),
-    };
-
     Router::new()
         .route("/health", get(health::get))
-        // Tokens
-        .route("/tokens/{id}", get(token::get))
-        .route("/tokens", post(token::create))
-        .route("/tokens/{id}", delete(token::delete))
-        // Simulations
-        .route("/{token_id}/simulations/{id}", get(simulation::get))
-        .route("/{token_id}/simulations", post(simulation::create))
-        .route("/{token_id}/simulations/{id}", delete(simulation::delete))
-        .with_state(state)
+        .route("/simulation", post(simulation::create))
 }
 
 #[cfg(test)]
