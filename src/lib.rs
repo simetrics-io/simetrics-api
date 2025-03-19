@@ -1,6 +1,8 @@
 use axum::{
+    body::{self, Body},
     extract::DefaultBodyLimit,
-    http::{Method, StatusCode},
+    http::{Method, Request, StatusCode},
+    middleware::{self, Next},
     response::{IntoResponse, Response},
     routing::post,
     Json, Router,
@@ -45,11 +47,17 @@ pub enum Exception {
     #[strum(props(status_code = "400"))]
     InvalidInput(String),
 
-    // Validation failed.
+    /// Validation failed.
     #[serde(rename = "VALIDATION_FAILED")]
     #[error("Validation failed: {0}")]
     #[strum(props(status_code = "400"))]
     ValidationFailed(String),
+
+    /// Payload too large.
+    #[serde(rename = "PAYLOAD_TOO_LARGE")]
+    #[error("Payload too large.")]
+    #[strum(props(status_code = "413"))]
+    PayloadTooLarge,
 }
 
 impl Exception {
@@ -102,6 +110,11 @@ impl IntoResponse for Exception {
     }
 }
 
+/// Create the application.
+///
+/// # Returns
+///
+/// The application router.
 pub async fn app() -> Router {
     // CORS
     let cors = CorsLayer::new()
@@ -112,7 +125,39 @@ pub async fn app() -> Router {
         .route("/simulation", post(simulation::create))
         .layer(cors)
         .layer(DefaultBodyLimit::disable())
-        .layer(RequestBodyLimitLayer::new(3 * 1024 * 1024))
+        .layer(RequestBodyLimitLayer::new(2 * 1024 * 1024))
+        .layer(middleware::from_fn(limit_response_size))
+}
+
+/// Limit the size of the response body.
+///
+/// # Arguments
+///
+/// * `req` - The request.
+/// * `next` - The next middleware in the chain.
+///
+/// # Returns
+///
+/// The response with the body size limited.
+pub async fn limit_response_size(
+    req: Request<Body>,
+    next: Next,
+) -> Result<Response<Body>, Exception> {
+    const MAX_RESPONSE_SIZE: usize = 2 * 1024 * 1024;
+
+    let response = next.run(req).await;
+
+    // Check the size of the response body
+    let body = match body::to_bytes(response.into_body(), MAX_RESPONSE_SIZE).await {
+        Ok(body) => body,
+        Err(_) => return Err(Exception::PayloadTooLarge),
+    };
+
+    if body.len() > MAX_RESPONSE_SIZE {
+        return Err(Exception::PayloadTooLarge);
+    }
+
+    Ok(Response::new(Body::from(body).into()))
 }
 
 #[cfg(test)]

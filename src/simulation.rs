@@ -60,6 +60,15 @@ pub async fn create(Json(data): Json<SimulationBuilder>) -> impl IntoResponse {
     }
 }
 
+/// Validate the token input data.
+///
+/// # Arguments
+///
+/// * `token` - Token input data.
+///
+/// # Returns
+///
+/// Result of the validation.
 fn validate_token(token: &Token) -> Result<(), Exception> {
     if let Some(airdrop) = token.airdrop_percentage {
         if airdrop <= Decimal::default() || airdrop > Decimal::new(100, 0) {
