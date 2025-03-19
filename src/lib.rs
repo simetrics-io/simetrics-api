@@ -1,7 +1,8 @@
 use axum::{
-    http::StatusCode,
+    extract::DefaultBodyLimit,
+    http::{Method, StatusCode},
     response::{IntoResponse, Response},
-    routing::{get, post},
+    routing::post,
     Json, Router,
 };
 use serde::Serialize;
@@ -10,8 +11,11 @@ use serde_variant::to_variant_name;
 use strum::EnumProperty;
 use strum_macros::{EnumIter, EnumProperty};
 use thiserror::Error;
+use tower_http::{
+    cors::{Any, CorsLayer},
+    limit::RequestBodyLimitLayer,
+};
 
-mod health;
 mod simulation;
 
 /// Exceptions that can be thrown by the application.
@@ -37,9 +41,15 @@ pub enum Exception {
 
     /// Invalid input.
     #[serde(rename = "INVALID_INPUT")]
-    #[error("Invalid input.")]
+    #[error("Invalid input: {0}")]
     #[strum(props(status_code = "400"))]
-    InvalidInput,
+    InvalidInput(String),
+
+    // Validation failed.
+    #[serde(rename = "VALIDATION_FAILED")]
+    #[error("Validation failed: {0}")]
+    #[strum(props(status_code = "400"))]
+    ValidationFailed(String),
 }
 
 impl Exception {
@@ -93,9 +103,16 @@ impl IntoResponse for Exception {
 }
 
 pub async fn app() -> Router {
+    // CORS
+    let cors = CorsLayer::new()
+        .allow_origin(Any)
+        .allow_methods([Method::POST]);
+
     Router::new()
-        .route("/health", get(health::get))
         .route("/simulation", post(simulation::create))
+        .layer(cors)
+        .layer(DefaultBodyLimit::disable())
+        .layer(RequestBodyLimitLayer::new(3 * 1024 * 1024))
 }
 
 #[cfg(test)]

@@ -28,8 +28,10 @@ tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
 tokenomics-simulator = { path = "../tokenomics-simulator-rs", features = [
   "serde",
 ] }
+rust_decimal = { version = "1.36.0" }
 thiserror = "2.0.11"
 strum = "0.26.3"
 strum_macros = "0.26.4"
 serde_variant = "0.1.3"
 serde_json = { version = "1.0.137", features = ["raw_value"] }
+tower-http = { version = "0.6.2", features = ["cors", "limit"] }
