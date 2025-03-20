@@ -1,7 +1,7 @@
 use axum::{
     body::{self, Body},
     extract::DefaultBodyLimit,
-    http::{Method, Request, StatusCode},
+    http::{Request, StatusCode},
     middleware::{self, Next},
     response::{IntoResponse, Response},
     routing::post,
@@ -13,10 +13,7 @@ use serde_variant::to_variant_name;
 use strum::EnumProperty;
 use strum_macros::{EnumIter, EnumProperty};
 use thiserror::Error;
-use tower_http::{
-    cors::{Any, CorsLayer},
-    limit::RequestBodyLimitLayer,
-};
+use tower_http::limit::RequestBodyLimitLayer;
 
 mod simulation;
 
@@ -116,14 +113,8 @@ impl IntoResponse for Exception {
 ///
 /// The application router.
 pub async fn app() -> Router {
-    // CORS
-    let cors = CorsLayer::new()
-        .allow_origin(Any)
-        .allow_methods([Method::POST]);
-
     Router::new()
         .route("/simulation", post(simulation::create))
-        .layer(cors)
         .layer(DefaultBodyLimit::disable())
         .layer(RequestBodyLimitLayer::new(2 * 1024 * 1024))
         .layer(middleware::from_fn(limit_response_size))
