@@ -16,6 +16,7 @@ use thiserror::Error;
 use tower_http::limit::RequestBodyLimitLayer;
 
 mod simulation;
+mod validator;
 
 /// Exceptions that can be thrown by the application.
 #[derive(Debug, Error, Serialize, PartialEq, Eq, EnumProperty, EnumIter)]
