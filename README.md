@@ -1,8 +1,17 @@
 # Simetrics API
 
+API for interacting with the [Tokenomics Simulator](https://github.com/simetrics-io/tokenomics-simulator-rs) allows users to simulate trades, calculate various metrics, and predict user behaviour over different time intervals.
+
+<p align="center">
+    <a href="https://simetrics.io" target="_blank" rel="noreferrer noopener">
+          <picture><img src="https://simetrics.io/preview.png" alt="An open-source engine for simulating the tokenomics of a project." style="width:auto;"></picture>
+    </a>
+</p>
+
 ## Reference implementation
 
 [![test](https://github.com/simetrics-io/simetrics-api/actions/workflows/test.yml/badge.svg)](https://github.com/simetrics-io/simetrics-api/actions/workflows/test.yml)
+![GitHub](https://img.shields.io/github/license/simetrics-io/simetrics-api)
 
 ## Prerequisites
 
@@ -11,64 +20,12 @@ Before you begin, ensure you have met the following requirements:
 - You have installed [Rust](https://doc.rust-lang.org/cargo/getting-started/installation.html).
 - You have installed [Cargo Watch](https://crates.io/crates/cargo-watch).
 
-## Getting Started
+## Safety
 
-### Clone the repository
+This crate uses `#![forbid(unsafe_code)]` to ensure everything is implemented in 100% safe Rust.
 
-```bash
-git clone https://github.com/simetrics-io/simetrics-api.git
-```
+## Contributing
 
-### Set up environment variables
+🎈 Thanks for your help improving the project! We are so happy to have you!
 
-```bash
-cp .env.dev .env
-```
-
-### Start an application
-
-```bash
-cargo watch -x 'run -p simetrics-api'
-```
-
-### Run tests
-
-> To run both unit & integration tests, use the following command: `cargo test`
-
-To run only unit tests, use the following command:
-
-```bash
-cargo test --lib
-```
-
-To run only integration tests, use the following command:
-
-```bash
-cargo test --test '*'
-```
-
-To run only one specific test, use the following command and replace `test_name` with the name of the test:
-
-```bash
-cargo test --test test_name
-```
-
-To run tests in watch mode, use the following command:
-
-```bash
-cargo watch -x test
-```
-
-To run tests with logs, use the following command:
-
-```bash
-cargo test -- --nocapture
-```
-
-### Check the codebase
-
-Catch common mistakes and improve the overall code quality.
-
-```bash
-cargo clippy --all-targets --all-features --no-deps -- -D warnings
-```
+We have a [contributing guide](https://github.com/simetrics-io/simetrics-api/blob/main/CONTRIBUTING.md) to help you get involved in the project.

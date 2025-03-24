@@ -1,8 +1,9 @@
 [package]
 name = "simetrics-api"
-description = "API for tokenomics simulator"
+description = "API for interacting with the Tokenomics Simulator."
 version = "0.1.0"
 publish = false
+license = "MIT"
 edition = "2021"
 readme = "README.md"
 homepage = "https://simetrics.io"
@@ -10,11 +11,11 @@ authors = ["simetrics <simetricsio@gmail.com>"]
 repository = "https://github.com/simetrics-io/tokenomics-api"
 
 [lib]
-name = "tokenomics_simulator_api"
+name = "simetrics_api"
 path = "src/lib.rs"
 
 [[bin]]
-name = "tokenomics_simulator_api"
+name = "simetrics_api"
 path = "src/main.rs"
 
 [dependencies]
@@ -23,8 +24,7 @@ serde = { version = "1.0.217", features = ["derive"] }
 tokio = { version = "1.43.0", features = ["full"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
-# TODO: update it so we can use in CI
-tokenomics-simulator = { path = "../tokenomics-simulator-rs", features = [
+tokenomics-simulator = { git = "https://github.com/simetrics-io/tokenomics-simulator-rs", branch = "main", features = [
   "serde",
 ] }
 rust_decimal = { version = "1.36.0" }
@@ -34,3 +34,8 @@ strum_macros = "0.26.4"
 serde_variant = "0.1.3"
 serde_json = { version = "1.0.137", features = ["raw_value"] }
 tower-http = { version = "0.6.2", features = ["limit"] }
+
+[patch.crates-io]
+tokenomics-simulator = { path = "../tokenomics-simulator-rs", features = [
+  "serde",
+] }

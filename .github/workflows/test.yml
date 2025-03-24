@@ -38,4 +38,10 @@ jobs:
     - name: Run lint
       run: cargo fmt -- --check
     - name: Run tests
-      run: cargo test --locked
+      run: cargo tarpaulin --locked --out xml
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        file: ./cobertura.xml

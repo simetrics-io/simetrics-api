@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 
-use tokenomics_simulator_api::app;
+use simetrics_api::app;
 use tokio::net::TcpListener;
 use tracing::info;
 
