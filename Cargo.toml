@@ -36,6 +36,4 @@ serde_json = { version = "1.0.137", features = ["raw_value"] }
 tower-http = { version = "0.6.2", features = ["limit"] }
 
 [patch.crates-io]
-tokenomics-simulator = { path = "../tokenomics-simulator-rs", features = [
-  "serde",
-] }
+tokenomics-simulator = { path = "../tokenomics-simulator-rs" }
